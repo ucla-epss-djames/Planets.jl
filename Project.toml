@@ -1,0 +1,4 @@
+name = "Planets"
+uuid = "d2fb0640-a787-40f6-ad8d-83a8a732c801"
+authors = ["David James <davidabraham@ucla.edu>"]
+version = "0.1.0"
