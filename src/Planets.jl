@@ -2,14 +2,17 @@
 # design still being added to it
 module Planets
 
-export Planet
+export Planet, Moon
 
 struct Planet
+
+    name :: String     # name of planet
 
     # structure parameters
     layers :: Real        # number of layers in structure file
     R      :: Real        # radius of planet
     M      :: Real        # mass of planet
+    GM     :: Real        # gravitational mass of planet
 
     # orbital parameters
     ω :: Real           # rotational frequency
@@ -34,6 +37,19 @@ struct Planet
     μ_f        :: Real    # standard linear solid parameter
     rhea_model :: Real    # modulus model to use
                             # 1 - Maxwell, 2 - SLS, 3 - Andrade
+
+end
+
+struct Moon
+
+    name :: String    # name of moon
+
+    # structure parameters
+    m  :: Real        # mass of moon
+    gm :: Real        # gravitational mass of moon
+
+    # orbital parameters
+    a :: Real         # orbital radius
 
 end
 
