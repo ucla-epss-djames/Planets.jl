@@ -28,6 +28,7 @@ struct Planet
     B    :: Real        # effective temperature exponent
     ∇    :: Real        # adiabtatic gradient
     T_eq :: Real        # radiative equilibrium temperature
+    T_ef :: Real        # Today's effective temperature
 
     # rheaology parameters
     η0         :: Real    # reference viscosity
