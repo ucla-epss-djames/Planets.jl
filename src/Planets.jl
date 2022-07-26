@@ -34,8 +34,8 @@ struct Planet
     η0         :: Real    # reference viscosity
     A          :: Real    # viscosity exponent
     Ra         :: Real    # critical Rayleigh number
-    μ_f        :: Real    # rhealogoy parameter
-                            # 1 - NONE, 2 - mu factor, 3 - alpha
+    μ_f        :: Tuple   # rhealogoy parameters
+                            # 1 - SLS mu factor, 2,3 - Andrade alpha, beta
     rhea_model :: Real    # modulus model to use
                             # 1 - Maxwell, 2 - SLS, 3 - Andrade
 
