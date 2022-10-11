@@ -52,6 +52,9 @@ struct Moon
     # orbital parameters
     a :: Real         # orbital radius
 
+    # flags
+    retro :: Bool     # is planet in retrograde motion
+
 end
 
 end # module
