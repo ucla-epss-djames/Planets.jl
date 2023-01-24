@@ -21,6 +21,7 @@ struct Planet
     C_p  :: Real        # specific heat
     α    :: Real        # thermal expansivity
     k    :: Real        # thermal conductivity
+    κ    :: Real        # thermal diffusivity
     T0   :: Real        # phase transition reference T
     P0   :: Real        # phase transition reference P
     a    :: Real        # Simon pressure
