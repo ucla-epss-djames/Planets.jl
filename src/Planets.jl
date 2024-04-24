@@ -30,6 +30,7 @@ struct Planet
     ∇    :: Real        # adiabtatic gradient
     T_eq :: Real        # radiative equilibrium temperature
     T_ef :: Real        # Today's effective temperature
+    T1   :: Real        # Temp at 1 bar
 
     # rheaology parameters
     η0         :: Real    # reference viscosity
