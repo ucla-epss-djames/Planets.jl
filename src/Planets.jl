@@ -1,7 +1,6 @@
 # structure based off of Stixrude '21 et al.
 # design still being added to it
 # NOTE:
-# - update T_1
 # - move structure and thermal code over here
 # - add mutator for mass and gm --> may be in PlanetEvolution.jl
 # - update matrix containers --> Tidal.jl
@@ -14,6 +13,8 @@
 # - look back on Andrade model
 module Planets
 
+include("structure.jl")
+include("thermal.jl")
 export Planet, Moon
 
 """

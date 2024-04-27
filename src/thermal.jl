@@ -1,5 +1,3 @@
-module Thermal
-
 using PhysicalConstants.CODATA2014: σ
 
 export planet_eta
@@ -210,5 +208,3 @@ Fortney & Nettelmann 2010.
 function layer_density(r::Real, P::Real, Px::Real, ∇::Real, ρ::Real)
     (P/Px)^∇ * ρ * r^2
 end
-
-end # module
