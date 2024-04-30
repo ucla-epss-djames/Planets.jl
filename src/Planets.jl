@@ -1,7 +1,6 @@
 # structure based off of Stixrude '21 et al.
 # design still being added to it
 # NOTE:
-# - move structure and thermal code over here
 # - add mutator for mass and gm --> may be in PlanetEvolution.jl
 # - update matrix containers --> Tidal.jl
 # - is Density.jl still a thing?
@@ -11,11 +10,16 @@
 # - also update BlockingMethod with changes Lars made --> BlockingMethod.jl
 # - Moon, retro flag can perhaps be removed since structure code will be added
 # - look back on Andrade model
+# - move some thermal functions to PlanetEvolution?
 module Planets
 
 include("structure.jl")
 include("thermal.jl")
+
+using PhysicalConstants.CODATA2014: σ
+
 export Planet, Moon
+export lumin_internal, lumin_core
 
 """
     Planet
@@ -118,5 +122,78 @@ struct Moon
     retro :: Bool
 
 end
+
+"""
+    lumin_internal(R::Float64, T_ef::Union{Int64, Float64},
+                   T_eq::Union{Int64, Float64})::Float64
+
+Calculates the total luminosity of the interior.
+
+# Arguments
+- `R::Float64`    - radius
+- `T_ef::Union{Int64, Float64}` - effective temperature
+- `T_eq::Union{Int64, Float64}` - radiative equilibrium temperature
+"""
+function lumin_internal(R::Float64, T_ef::Union{Int64, Float64},
+                        T_eq::Union{Int64, Float64})::Float64
+    4π*R^2 * σ.val * (T_ef^4 - T_eq^4)
+end
+
+"""
+    lumin_core(T1::Union{Int64, Float64}, Ti::Float64, c::Float64,
+               P_c::Float64, T_c::Float64, ρ_c::Float64, g_c::Float64,
+               P1::Float64,
+               plnt::NamedTuple{(:α, :k, :κ, :T0, :P0, :a, :b, :∇, :η0, :A, :Ra),
+                                Float64})::NamedTuple{(:L_c, :K, :ΔT, :Γ, :Ra), Float64}
+
+Calculates the luminosty due to the core. Refer to Stixrude et al. 2021 (eq 9-16).
+
+# Arguments
+- `T1::Union{Int64, Float64}`  - temperature of envelope
+- `Ti::Float64`  - temperature at top of thermal boundary
+- `c::Float64`   - radius of core
+- `P_c::Float64` - pressure at top of the core
+- `T_c::Float64` - temperature at top of the core
+- `ρ_c::Float64` - density at top of the core
+- `g_c::Float64` - gravity at top of the core
+- `P1::Float64`  - reference pressure
+- `plnt::Planet` - planet struct
+"""
+function lumin_core(T1::Union{Int64, Float64}, Ti::Float64, c::Float64,
+                    P_c::Float64, T_c::Float64, ρ_c::Float64, g_c::Float64,
+                    P1::Float64,
+                    plnt::Planet)::NamedTuple{(:L_c, :K, :ΔT, :Γ, :Ra), Float64}
+    if(Ti < 0)
+        P_c = plnt.P0 - plnt.a + 1e-6
+        Ti = temp_adiabat(P_c, T1, P1, plnt.∇)
+    end
+
+    P_ratio = (P_c / P1)^plnt.∇
+
+    ΔT = Ti - T_c
+    ΔP = P_c - plnt.P0
+
+    Γ = cc_slope(P_c, plnt.P0, plnt.T0, plnt.a, plnt.b)
+    Γ_a = temp_distribution(P_c, T_c, plnt.∇)
+    ΔΓ = Γ - Γ_a
+
+    h = visc_height(T_c, ρ_c, g_c, plnt.A, Γ, Γ_a)
+    if(h > c) h = c end
+
+    T_m = temp_melting(P_c, plnt.P0, plnt.T0, plnt.a, plnt.b)
+
+    η = planet_eta(plnt.η0, plnt.A, T_m, T_c)
+
+    Ra = ρ_c * plnt.α * abs(ΔT) * g_c * abs(h)^3 / (plnt.κ * η)
+
+    K = ρ_c * plnt.α * g_c / (plnt.Ra * η * plnt.κ)
+    L_c = plnt.k * K^(1/3) * ((h / c)^(4))^(1/3) * (ΔT^4)^(1/3) * 4*π*c^2
+
+    # this is value next to ∂c/∂t term in the derivation
+    K = - 1 / (ρ_c * g_c * ΔΓ) * P_ratio
+
+    return (L_c=L_c, K=K, ΔT=ΔT, Γ=Γ_a/ΔΓ, Ra=Ra)
+end
+
 
 end # module
