@@ -134,7 +134,7 @@ Calculates the total luminosity of the interior.
 - `plnt::Planet` - Planet struct for radiative equilibrium temperature
 """
 function lumin_internal(R::Float64, T_ef::Union{Int64, Float64},
-                        plnt::Plant)::Float64
+                        plnt::Planet)::Float64
     4π*R^2 * σ.val * (T_ef^4 - plnt.T_eq^4)
 end
 
