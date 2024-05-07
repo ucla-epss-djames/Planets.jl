@@ -10,7 +10,6 @@
 # - also update BlockingMethod with changes Lars made --> BlockingMethod.jl
 # - Moon, retro flag can perhaps be removed since structure code will be added
 # - look back on Andrade model
-# - move some thermal functions to PlanetEvolution?
 module Planets
 
 include("structure.jl")
@@ -132,11 +131,11 @@ Calculates the total luminosity of the interior.
 # Arguments
 - `R::Float64`    - radius
 - `T_ef::Union{Int64, Float64}` - effective temperature
-- `T_eq::Union{Int64, Float64}` - radiative equilibrium temperature
+- `plnt::Planet` - Planet struct for radiative equilibrium temperature
 """
 function lumin_internal(R::Float64, T_ef::Union{Int64, Float64},
-                        T_eq::Union{Int64, Float64})::Float64
-    4π*R^2 * σ.val * (T_ef^4 - T_eq^4)
+                        plnt::Plant)::Float64
+    4π*R^2 * σ.val * (T_ef^4 - plnt.T_eq^4)
 end
 
 """
