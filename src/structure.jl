@@ -1,4 +1,6 @@
 using SpecialFunctions: gamma
+using PhysicalConstants.CODATA2014: G
+using QuadGK: quadgk
 
 export dmdr, dPdr
 export planet_m, planet_g, planet_mmotion, planet_mu, planet_cmu
@@ -26,6 +28,8 @@ Gravitational constant multiplied by the mass of the body.
 - `gm::Float64` - gravitational mass
 """
 dPdr(r::Float64, ρ::Float64, gm::Float64)::Float64 = -gm * ρ / r^2
+
+"dPdr(ρ::Float64, g::Float64)::Float64"
 dPdr(ρ::Float64, g::Float64)::Float64 = -ρ * g
 
 """
@@ -38,6 +42,53 @@ Gravity due to a spherical mass.
 - `gm::Float64` - gravitational mass
 """
 planet_g(r::Float64, gm::Float64)::Float64 = r == 0 ? 0 : gm / r^2
+
+"""
+    calc_gravity(r0::Float64, r1::Float64, m::Float64,
+                      ρ::Function)::NTuple{2, Float64}
+
+Calculates the gravity of a planetary body.
+
+# Arguments
+- `r0::Float64` - initial radius
+- `r1::Float64` - final radius
+- `m::Float64` - mass
+- `ρ::Function` - density function
+"""
+function calc_gravity(r0::Float64, r1::Float64, m::Float64,
+                      ρ::Function)::NTuple{2, Float64}
+
+    res, err = quadgk(x -> dmdr(x, ρ(x)), r0, r1)
+    m += res
+
+    g = planet_g(r1, m*G.val)
+
+    return (m, g)
+end
+
+"""
+    calc_gravity(r0::Float64, r1::Float64, m::Float64,
+                      ρ::Float64)::Ntuple{2, Float64}
+
+Calculates the gravity of a planetary body.
+
+# Arguments
+- `r0::Float64` - initial radius
+- `r1::Float64` - final radius
+- `m::Float64` - mass
+- `ρ::Float64` - density
+"""
+function calc_gravity(r0::Float64, r1::Float64, m::Float64,
+                      ρ::Float64)::Ntuple{2, Float64}
+
+    res, err = quadgk(x -> dmdr(x, ρ), r0, r1)
+    m += res
+
+    g = planet_g(r1, m*G.val)
+
+    return (m, g)
+end
+
 
 """
     planet_mmotion(gm::Float64, a::Float64)::Float64

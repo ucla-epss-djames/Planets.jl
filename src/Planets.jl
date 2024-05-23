@@ -1,15 +1,3 @@
-# structure based off of Stixrude '21 et al.
-# design still being added to it
-# NOTE:
-# - add mutator for mass and gm --> may be in PlanetEvolution.jl
-# - update matrix containers --> Tidal.jl
-# - is Density.jl still a thing?
-# - move BM3 and other extrapolation schemes --> Elastic.jl
-# - update packages across all these modules
-# - push all repos by the end of the quarter
-# - also update BlockingMethod with changes Lars made --> BlockingMethod.jl
-# - Moon, retro flag can perhaps be removed since structure code will be added
-# - look back on Andrade model
 module Planets
 
 include("structure.jl")
