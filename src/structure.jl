@@ -55,8 +55,8 @@ Calculates the gravity of a planetary body.
 - `m::Float64` - mass
 - `ρ::Function` - density function
 """
-function calc_gravity(r0::Float64, r1::Float64, m::Float64,
-                      ρ::Function)::NTuple{2, Float64}
+function calc_gravity(r0::Union{Int64, Float64}, r1::Union{Int64, Float64},
+                      m::Union{Int64, Float64}, ρ::Function)::NTuple{2, Float64}
 
     res, err = quadgk(x -> dmdr(x, ρ(x)), r0, r1)
     m += res
@@ -78,8 +78,9 @@ Calculates the gravity of a planetary body.
 - `m::Float64` - mass
 - `ρ::Float64` - density
 """
-function calc_gravity(r0::Float64, r1::Float64, m::Float64,
-                      ρ::Float64)::Ntuple{2, Float64}
+function calc_gravity(r0::Union{Int64, Float64}, r1::Union{Int64, Float64},
+                      m::Union{Int64, Float64},
+                      ρ::Union{Int64, Float64})::Ntuple{2, Float64}
 
     res, err = quadgk(x -> dmdr(x, ρ), r0, r1)
     m += res
