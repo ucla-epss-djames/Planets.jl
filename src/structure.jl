@@ -56,7 +56,7 @@ Calculates the gravity of a planetary body.
 - `ρ::Function` - density function
 """
 function calc_gravity(r0::Union{Int64, Float64}, r1::Union{Int64, Float64},
-                      m::Union{Int64, Float64}, ρ::Function)::NTuple{2, Float64}
+                      m::Union{Int64, Float64}, ρ::Function)::Tuple{Float64, Float64}
 
     res, err = quadgk(x -> dmdr(x, ρ(x)), r0, r1)
     m += res
@@ -79,8 +79,8 @@ Calculates the gravity of a planetary body.
 - `ρ::Float64` - density
 """
 function calc_gravity(r0::Union{Int64, Float64}, r1::Union{Int64, Float64},
-                      m::Union{Int64, Float64},
-                      ρ::Union{Int64, Float64})::Ntuple{2, Float64}
+                      m::Union{Int64, Float64}, ρ::Union{Int64, Float64}
+                      )::Tuple{Float64, Float64}
 
     res, err = quadgk(x -> dmdr(x, ρ), r0, r1)
     m += res
@@ -149,8 +149,8 @@ Standard Linear Solid model. Refer to Stixrude et al. 2021 or Norwick & Berry
 - `η::Float64`   - viscosity
 - `μ_f::Float64` - SLS parameter s.t. μ₁/μ₀
 """
-function cmu_SLS(μ0::Float64, ω::Float64, η::Float64,
-                 μ_f::Union{Int64, Float64})::ComplexF64
+function cmu_SLS(μ0::Float64, ω::Float64, η::Float64, μ_f::Union{Int64, Float64}
+                 )::ComplexF64
 
     μ1 = μ0 * μ_f
 
@@ -210,7 +210,9 @@ models.
 - `model::Int64` - model desire ([1] Maxwell, [2] SLS, [3] Andrade)
 """
 function planet_cmu(μ::Float64, ω::Float64, η::Float64, r::Float64, g::Float64,
-                    ρ::Float64, μ_f::NTuple{3, Union{Int64, Float64}},
+                    ρ::Float64, μ_f::Tuple{Union{Int64, Float64},
+                                           Union{Int64, Float64},
+                                           Union{Int64, Float64}},
                     model::Int64)::ComplexF64
 
     if η == 0.0
