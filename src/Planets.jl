@@ -148,7 +148,7 @@ Calculates the luminosty due to the core. Refer to Stixrude et al. 2021 (eq 9-16
 function lumin_core(T1::Union{Int64, Float64}, Ti::Float64, c::Float64,
                     P_c::Float64, T_c::Float64, ρ_c::Float64, g_c::Float64,
                     P1::Float64, plnt::Planet
-                    )::NamedTuple{(:L_c, :K, :ΔT, :Γ, :Ra), Float64}
+                    )::NamedTuple{(:L_c, :K, :ΔT, :Γ, :Ra), NTuple{5, Float64}}
     if(Ti < 0)
         P_c = plnt.P0 - plnt.a + 1e-6
         Ti = temp_adiabat(P_c, T1, P1, plnt.∇)
