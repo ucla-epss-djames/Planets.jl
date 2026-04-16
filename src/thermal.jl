@@ -14,7 +14,7 @@ Calculates viscosity. Refer to Stixrude et al. 2021 (eq 15).
 - `T_m::Float64` - melting temperature
 - `T::Float64`   - temperature
 """
-function planet_eta(η0::Float64, A::Float64, T_m::Float64, T::Float64)::Float64
+function planet_eta(η0::Float64, A::Int64, T_m::Float64, T::Float64)::Float64
     η0 * exp(A * (T_m/T - 1))
 end
 
